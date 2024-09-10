@@ -30,5 +30,5 @@ https://github.com/ocornut/imgui
 https://github.com/freetype/freetype
 
 ## スクリーンショット
-![image](https://github.com/user-attachments/assets/43d642a7-5cea-45da-aeaa-fca1dd4422fc)
 ![image](https://github.com/user-attachments/assets/f4660917-e376-4d32-8d03-146d6cf7e048)
+![image](https://github.com/user-attachments/assets/43d642a7-5cea-45da-aeaa-fca1dd4422fc)
