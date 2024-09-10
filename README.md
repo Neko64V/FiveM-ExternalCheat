@@ -22,7 +22,7 @@ https://learn.microsoft.com/ja-jp/cpp/build/vscpp-step-0-installation?view=msvc-
 
 ## 免責事項
 このプロジェクトは学習や研究・教育用としてアップロードされました。  
-これらの用途以外で使用した場合に発生した如何なる損害等についても、製作者(Neko64V)は一切の責任を負いません。  
+これらの用途以外で使用した場合に発生した如何なる損害についても、製作者(Neko64V)は一切の責任を負いません。  
 
 ## 使用したライブラリ
 * Microsoft DirectXTK->SimpleMath  
