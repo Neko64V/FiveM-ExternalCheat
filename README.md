@@ -5,10 +5,13 @@ FiveM/GTA Online向けの外部チートです。チート開発に対する興�
 ## 機能
 * AIMBOT
 * ESP
-* プレイヤーリスト
-* MenuKey : END
+* PlayerList
+* Local Mod
+* MenuKey : INSERT
 
 ## 備考
+* エイム予測は非常に不正確です。作り直すことを推奨します。
+* プレイヤーの名前を取得するコードを含むいくらかのコードが削除されています。
 * メニューにImGuiを採用、ESP等のレンダリングもImGuiのDrawListを使用。
 * ImGuiに最低限のカスタムを施しているので参考にすることも可。（ImGui/Custom.cpp）
 * ある程度フレームワーク化を行ったので、他のゲームのチートへ比較的簡単に転用可能。
