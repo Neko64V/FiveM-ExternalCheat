@@ -63,30 +63,25 @@ bool CFramework::AimBot(CPed& target)
     target = CPed();
 }
 
-void CFramework::MiscThread()
+void CFramework::MiscAll()
 {
-    while (g.Run)
-    {
-        // GodMode
-        if (g.GodMode && !local.IsGod())
-            m.Write<bool>(local.Ped + sdk.m_pGodMode, true);
-        else if (!g.GodMode && local.IsGod())
-            m.Write<bool>(local.Ped + sdk.m_pGodMode, false);
+    // GodMode
+    if (g.GodMode && !local.IsGod())
+        m.Write<bool>(local.Ped + sdk.m_pGodMode, true);
+    else if (!g.GodMode && local.IsGod())
+        m.Write<bool>(local.Ped + sdk.m_pGodMode, false);
 
-        // HealMe
-        if (g.HealMe && local.m_fHealth <= local.m_fMaxHealth)
-            m.Write<float>(local.Ped + sdk.m_pHealth, local.m_fHealth + 0.2f);
+    // HealMe
+    if (g.HealMe && local.m_fHealth <= local.m_fMaxHealth)
+        m.Write<float>(local.Ped + sdk.m_pHealth, local.m_fHealth + 0.2f);
 
-        // NoRecoil
-        if (g.NoRecoil && m.Read<float>(local.CurrentWeapon + sdk.m_WepRecoil) > 0.f)
-            m.Write<float>(local.CurrentWeapon + sdk.m_WepRecoil, 0.f);
+    // NoRecoil
+    if (g.NoRecoil && m.Read<float>(local.CurrentWeapon + sdk.m_WepRecoil) > 0.f)
+        m.Write<float>(local.CurrentWeapon + sdk.m_WepRecoil, 0.f);
 
-        // NoSpread
-        if (g.NoSpread && m.Read<float>(local.CurrentWeapon + sdk.m_WepSpread) > 0.f)
-            m.Write<float>(local.CurrentWeapon + sdk.m_WepSpread, 0.f);
-
-        Sleep(10);
-    }
+    // NoSpread
+    if (g.NoSpread && m.Read<float>(local.CurrentWeapon + sdk.m_WepSpread) > 0.f)
+        m.Write<float>(local.CurrentWeapon + sdk.m_WepSpread, 0.f);
 }
 
 void CFramework::UpdateList()

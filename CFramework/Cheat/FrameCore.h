@@ -11,7 +11,7 @@ class CFramework
 public:
     void UpdateList();
     bool AimBot(CPed& target);
-    void MiscThread();
+    void MiscAll();
 
     bool Init();
 

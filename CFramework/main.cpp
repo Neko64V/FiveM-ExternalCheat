@@ -1,8 +1,8 @@
 #include "Cheat/FrameCore.h"
 #include "Framework/Overlay/Overlay.h"
 
-Overlay*	ov = new Overlay;
-CFramework* cx = new CFramework;
+Overlay*	C_Overlay = new Overlay;
+CFramework* C_FiveM = new CFramework;
 
 // DEBUG時にはコンソールウィンドウを表示する
 #if _DEBUG
@@ -19,18 +19,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 1;
 
 	// Overlay
-	if (!ov->InitOverlay("grcWindow", MODE::WINDOW))
+	if (!C_Overlay->InitOverlay("grcWindow", MODE::WINDOW))
 		return 2;
 
 	// Sorry, i added this
-	if (!cx->Init())
+	if (!C_FiveM->Init())
 		return 3;
 
-	ov->OverlayLoop();
-	ov->DestroyOverlay();
+	C_Overlay->OverlayLoop();
+	C_Overlay->DestroyOverlay();
 	m.DetachProcess();
 	g.Run = false;
-	delete cx, ov;
+	delete C_FiveM, C_Overlay;
 
 	return 0;
 }
@@ -45,19 +45,20 @@ void Overlay::OverlayLoop()
 			DispatchMessage(&msg);
 		}
 
+		C_FiveM->MiscAll();
 		OverlayManager("grcWindow");
 
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-		cx->RenderInfo();
+		C_FiveM->RenderInfo();
 
 		if (g.ESP)
-			cx->RenderESP();
+			C_FiveM->RenderESP();
 
 		if (g.ShowMenu)
-			cx->RenderMenu();
+			C_FiveM->RenderMenu();
 
 		ImGui::Render();
 		const float clear_color_with_alpha[4] = { 0.f, 0.f, 0.f, 0.f };
