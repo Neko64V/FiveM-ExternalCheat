@@ -3,6 +3,13 @@
 int bone = 0;
 Vector3 GetPrediction(CPed& target, CPed& local);
 
+bool CFramework::Init()
+{
+    std::thread([&]() { this->UpdateList(); }).detach();
+
+    return sdk.InitOffset();
+}
+
 bool CFramework::AimBot(CPed& target)
 {
     /*----| SomeChecks |--------------------------------------------------------------------------------*/

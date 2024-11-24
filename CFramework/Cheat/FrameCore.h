@@ -13,6 +13,8 @@ public:
     bool AimBot(CPed& target);
     void MiscThread();
 
+    bool Init();
+
 	void RenderInfo();
 	void RenderMenu();
 	void RenderESP();

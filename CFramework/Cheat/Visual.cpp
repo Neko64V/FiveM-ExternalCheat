@@ -4,7 +4,7 @@ void CFramework::RenderInfo()
 {
     // ウォーターマーク
     std::string text = std::to_string((int)ImGui::GetIO().Framerate) + "FPS";
-    StringEx(ImVec2(8.f, 8.f), ImColor(1.f, 1.f, 1.f, 1.f), 14.f, text.c_str());
+    StringEx(ImVec2(8.f, 8.f), ImColor(1.f, 1.f, 1.f, 1.f), ImGui::GetFontSize(), text.c_str());
 
     ImGui::GetStyle().AntiAliasedLines = false;
 
@@ -146,7 +146,7 @@ void CFramework::RenderESP()
         if (g.ESP_Distance)
         {
             std::string DistStr = std::to_string((int)pDistance) + "m";
-            StringEx(ImVec2(pBase.x - ImGui::CalcTextSize(DistStr.c_str()).x / 2.f, pBottom), ImColor(1.f, 1.f, 1.f, 1.f), 14.f, DistStr.c_str());
+            StringEx(ImVec2(pBase.x - ImGui::CalcTextSize(DistStr.c_str()).x / 2.f, pBottom), ImColor(1.f, 1.f, 1.f, 1.f), ImGui::GetFontSize(), DistStr.c_str());
         }
 
         // Name
@@ -156,7 +156,7 @@ void CFramework::RenderESP()
 
             /* - GTA Online
             std::string pName = m.ReadString(pEntity->PlayerInfo + 0xFC);
-            StringEx(ImVec2(pBase.x - ImGui::CalcTextSize(pName.c_str()).x / 2.f, pTop - 15.f), ImColor(1.f, 1.f, 1.f, 1.f), 14.f, pName.c_str());
+            StringEx(ImVec2(pBase.x - ImGui::CalcTextSize(pName.c_str()).x / 2.f, pTop - 15.f), ImColor(1.f, 1.f, 1.f, 1.f), ImGui::GetFontSize(), pName.c_str());
             */
         }
 

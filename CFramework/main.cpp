@@ -1,7 +1,7 @@
 #include "Cheat/FrameCore.h"
 #include "Framework/Overlay/Overlay.h"
 
-Overlay		*ov = new Overlay;
+Overlay*	ov = new Overlay;
 CFramework* cx = new CFramework;
 
 // DEBUG時にはコンソールウィンドウを表示する
@@ -21,6 +21,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Overlay
 	if (!ov->InitOverlay("grcWindow", MODE::WINDOW))
 		return 2;
+
+	// Sorry, i added this
+	if (!cx->Init())
+		return 3;
 
 	ov->OverlayLoop();
 	ov->DestroyOverlay();
