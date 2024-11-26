@@ -36,8 +36,6 @@ https://learn.microsoft.com/ja-jp/cpp/build/vscpp-step-0-installation?view=msvc-
 https://github.com/microsoft/DirectXTK  
 * ImGui  
 https://github.com/ocornut/imgui  
-* FreeType  
-https://github.com/freetype/freetype
 
 ## スクリーンショット
 ![image](https://github.com/user-attachments/assets/f4660917-e376-4d32-8d03-146d6cf7e048)
