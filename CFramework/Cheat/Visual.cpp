@@ -61,14 +61,32 @@ void CFramework::RenderESP()
             continue;
 
         // Bone W2S
-        Vector2 pBase{}, pHead{}, pNeck{}, pLeftFoot{}, pRightFoot{};
-        if (!WorldToScreen(ViewMatrix, pEntity->m_pVecLocation, pBase) || !WorldToScreen(ViewMatrix, pEntity->BoneList[HEAD], pHead) || !WorldToScreen(ViewMatrix, pEntity->BoneList[NECK], pNeck) || !WorldToScreen(ViewMatrix, pEntity->BoneList[LEFTFOOT], pLeftFoot) || !WorldToScreen(ViewMatrix, pEntity->BoneList[RIGHTFOOT], pRightFoot))
+        Vector2 pBase{};
+        if (!WorldToScreen(ViewMatrix, pEntity->m_pVecLocation, pBase))
+            continue;
+
+        std::vector<Vector2> bScreen;
+        std::vector<Vector3> BoneList = pEntity->GetBoneList();
+
+        for (int j = 0; j < BoneList.size(); j++)
+        {
+            Vector2 vOut{};
+
+            if (Vec3_Empty(BoneList[j]))
+                continue;
+            else if (!WorldToScreen(ViewMatrix, BoneList[j], vOut))
+                continue;
+
+            bScreen.push_back(vOut);
+        }
+
+        if (BoneList.size() != bScreen.size())
             continue;
 
         // ESP Resource
-        float HeadToNeck = pNeck.y - pHead.y;
-        float pTop = pHead.y - (HeadToNeck * 2.5f);
-        float pBottom = pLeftFoot.y > pRightFoot.y ? pLeftFoot.y : pRightFoot.y;
+        float HeadToNeck = bScreen[NECK].y - bScreen[HEAD].y;
+        float pTop = bScreen[HEAD].y - (HeadToNeck * 2.5f);
+        float pBottom = bScreen[LEFTFOOT].y > bScreen[RIGHTFOOT].y ? bScreen[LEFTFOOT].y : bScreen[RIGHTFOOT].y;
         float pHeight = pBottom - pTop;
         float pWidth = pHeight / 3.5f;
         float bScale = pWidth / 1.5f;
@@ -115,9 +133,10 @@ void CFramework::RenderESP()
         if (g.ESP_Skeleton)
         {
             // Head
-            Circle(ImVec2(pHead.x, pHead.y), HeadToNeck, ESP_Skeleton);
+            Circle(ImVec2(bScreen[HEAD].x, bScreen[HEAD].y), HeadToNeck, ESP_Skeleton);
 
-            Vector3 bList[][2] = { { pEntity->BoneList[NECK], pEntity->BoneList[HIP] }, { pEntity->BoneList[NECK], pEntity->BoneList[LEFTHAND] }, { pEntity->BoneList[NECK], pEntity->BoneList[RIGHTHAND] }, { pEntity->BoneList[HIP], pEntity->BoneList[LEFTANKLE] }, { pEntity->BoneList[HIP], pEntity->BoneList[RIGHTANKLE] } };
+            Vector3 bList[][2] = { { BoneList[NECK], BoneList[HIP] }, { BoneList[NECK], BoneList[LEFTHAND] }, { BoneList[NECK], BoneList[RIGHTHAND] }, 
+                { BoneList[HIP], BoneList[LEFTANKLE] }, { BoneList[HIP], BoneList[RIGHTANKLE] } };
 
             // Body
             for (int j = 0; j < 5; j++)
@@ -152,8 +171,6 @@ void CFramework::RenderESP()
         // Name
         if (g.ESP_Name)
         {
-
-
             /* - GTA Online
             std::string pName = m.ReadString(pEntity->PlayerInfo + 0xFC);
             StringEx(ImVec2(pBase.x - ImGui::CalcTextSize(pName.c_str()).x / 2.f, pTop - 15.f), ImColor(1.f, 1.f, 1.f, 1.f), ImGui::GetFontSize(), pName.c_str());
@@ -173,7 +190,7 @@ void CFramework::RenderESP()
                 for (int j = 0; j < 9; j++)
                 {
                     Vector2 fov_check{};
-                    if (!WorldToScreen(ViewMatrix, pEntity->BoneList[j], fov_check))
+                    if (!WorldToScreen(ViewMatrix, BoneList[j], fov_check))
                         continue;
 
                     float FOV = abs((Center - fov_check).Length());
@@ -212,7 +229,7 @@ void CFramework::RenderESP()
     // AimBot
     if (g.AimBot)
     {
-        if (target.Ped != NULL)
+        if (target.address != NULL)
             AimBot(target);
     }
 }

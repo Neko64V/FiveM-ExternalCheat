@@ -2,28 +2,27 @@
 
 bool CPed::GetPlayer(uintptr_t& address)
 {
-	Ped = address;
-	return Ped == NULL ? false : true;
+	address = address;
+	return address == NULL ? false : true;
 }
 
 bool CPed::Update()
 {
-    Vehicle = m.Read<uintptr_t>(Ped + sdk.m_pVehicle);
-    PlayerInfo = m.Read<uintptr_t>(Ped + sdk.m_pInfo);
-    uintptr_t weapon = m.Read<uintptr_t>(Ped + sdk.m_pWeaponManager);
+    Vehicle = m.Read<uintptr_t>(address + sdk.m_pVehicle);
+    PlayerInfo = m.Read<uintptr_t>(address + sdk.m_pInfo);
+    uintptr_t weapon = m.Read<uintptr_t>(address + sdk.m_pWeaponManager);
     CurrentWeapon = m.Read<uintptr_t>(weapon + 0x20);
 
     // PedData
-    m_fHealth = m.Read<float>(Ped + sdk.m_pHealth);
-    m_pVecLocation = m.Read<Vector3>(Ped + sdk.m_pVecLocation);
+    m_fHealth = m.Read<float>(address + sdk.m_fHealth);
+    m_pVecLocation = m.Read<Vector3>(address + sdk.m_vecLocation);
 
     if (IsDead())
         return false;
 
-    m_fArmor = m.Read<float>(Ped + sdk.m_pArmor);
-    m_fMaxHealth = m.Read<float>(Ped + sdk.m_pHealthMax);
-    m_bMatrix = m.Read<Matrix>(Ped + sdk.m_bMatrix);
-    GetBoneList();
+    m_fArmor = m.Read<float>(address + sdk.m_fArmor);
+    m_fMaxHealth = m.Read<float>(address + sdk.m_fHealthMax);
+    m_bMatrix = m.Read<Matrix>(address + sdk.m_pBoneMatrix);
 
     return true;
 }
@@ -40,29 +39,41 @@ bool CPed::IsPlayer()
 
 bool CPed::InVehicle()
 {
-    return m.Read<uint8_t>(Ped + sdk.m_pPedTask) & (uint8_t)ePedTask::TASK_DRIVING;
+    return m.Read<uint8_t>(address + sdk.m_bPedTask) & (uint8_t)ePedTask::TASK_DRIVING;
 }
 
 bool CPed::IsGod()
 {
-    return m.Read<bool>(Ped + sdk.m_pGodMode) == true;
+    return m.Read<bool>(address + sdk.m_bGodMode) == true;
 }
 
-void CPed::GetBoneList()
+struct Bone {
+    Vector3 pos{};
+    int junk0{};
+};
+
+struct AllBone {
+    Bone bone[9]{};
+};
+
+std::vector<Vector3> CPed::GetBoneList()
 {
-    CBone bone = m.Read<CBone>(Ped + sdk.m_pBoneList);
-    BoneList[HEAD] = Vec3_Transform(&bone.gHead, &m_bMatrix);
-    BoneList[LEFTFOOT] = Vec3_Transform(&bone.gLeftFoot, &m_bMatrix);
-    BoneList[RIGHTFOOT] = Vec3_Transform(&bone.gRightFoot, &m_bMatrix);
-    BoneList[LEFTANKLE] = Vec3_Transform(&bone.gLeftAnkle, &m_bMatrix);
-    BoneList[RIGHTANKLE] = Vec3_Transform(&bone.gRightAnkle, &m_bMatrix);
-    BoneList[LEFTHAND] = Vec3_Transform(&bone.gLeftHand, &m_bMatrix);
-    BoneList[RIGHTHAND] = Vec3_Transform(&bone.gRightHand, &m_bMatrix);
-    BoneList[NECK] = Vec3_Transform(&bone.gNeck, &m_bMatrix);
-    BoneList[HIP] = Vec3_Transform(&bone.gHip, &m_bMatrix);
+    std::vector<Vector3> list;
+    AllBone b_list = m.Read<AllBone>(address + sdk.m_pBoneList), *BoneList = &b_list;
+
+    for (int b = 0; b < 9; b++) 
+    {
+        if (Vec3_Empty(BoneList->bone[b].pos))
+            list.push_back(Vector3());
+
+        Vector3 pos = BoneList->bone[b].pos;
+        list.push_back(Vec3_Transform(&pos, &m_bMatrix));
+    }
+
+    return list;
 }
 
 Vector3 CPed::GetVelocity()
 {
-    return InVehicle() ? m.Read<Vector3>(Vehicle + sdk.m_pVehicleVelocity) : m.Read<Vector3>(Ped + sdk.m_pVelocity);
+    return InVehicle() ? m.Read<Vector3>(Vehicle + sdk.m_vecVehicleVelocity) : m.Read<Vector3>(address + sdk.m_vecVelocity);
 }

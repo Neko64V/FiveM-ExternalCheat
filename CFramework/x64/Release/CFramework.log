@@ -1,0 +1,16 @@
+﻿  Visual.cpp
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(1,1): warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(21,76): warning C4244: '引数': 'LONG' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(21,53): warning C4244: '引数': 'LONG' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(26,148): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(27,133): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(103,63): warning C4244: '引数': 'LONG' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(160,100): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(160,80): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\CFramework\Cheat\Visual.cpp(163,83): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  コード生成しています。
+  1 of 2243 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    46 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  CFramework.vcxproj -> C:\Users\saway\Desktop\プロジェクト\_Cheat\FiveM-ExternalCheat\x64\Release\CFramework.exe

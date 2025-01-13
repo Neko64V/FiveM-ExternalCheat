@@ -22,18 +22,18 @@ bool SDK::InitOffset()
         m_pWeaponManager = 0x10D8;
 
         // Ped
-        m_pHealthMax = 0x2A0;
-        m_pVelocity = 0x320;
+        m_fHealthMax = 0x2A0;
+        m_vecVelocity = 0x320;
         m_pBoneList = 0x430;
-        m_pArmor = 0x1530;
-        m_pPedTask = 0x146B;
+        m_fArmor = 0x1530;
+        m_bPedTask = 0x146B;
 
         // Vehicle
-        m_pVehicleVelocity = 0x7F0;
-        m_pVehicleEngineHealth = 0x908;
+        m_vecVehicleVelocity = 0x7F0;
+        m_fVehicleEngineHealth = 0x908;
 
         // Weapon
-        m_WepSpread = 0x84;
+        m_fWeaponSpread = 0x84;
 
         printf("[ LOG ] b2699\n");
 
@@ -48,11 +48,11 @@ bool SDK::InitOffset()
         Camera = 0x1FBCCD8;
 
         // Vehicle
-        m_pVehicleVelocity = 0x7D0;
-        m_pVehicleEngineHealth = 0x8E8;
+        m_vecVehicleVelocity = 0x7D0;
+        m_fVehicleEngineHealth = 0x8E8;
 
         // Weapon
-        m_WepSpread = 0x84;
+        m_fWeaponSpread = 0x84;
 
         printf("[ LOG ] b2802\n");
 
@@ -67,11 +67,11 @@ bool SDK::InitOffset()
         Camera = 0x1FEB698;
 
         // Vehicle
-        m_pVehicleVelocity = 0x7D0;
-        m_pVehicleEngineHealth = 0x8E8;
+        m_vecVehicleVelocity = 0x7D0;
+        m_fVehicleEngineHealth = 0x8E8;
 
         // Weapon
-        m_WepSpread = 0x74;
+        m_fWeaponSpread = 0x74;
 
         printf("[ LOG ] b2944\n");
 
@@ -86,14 +86,24 @@ bool SDK::InitOffset()
         Camera = 0x20025B8;
 
         // Vehicle
-        m_pVehicleVelocity = 0x7E0;
-        m_pVehicleEngineHealth = 0x910;
+        m_vecVehicleVelocity = 0x7E0;
+        m_fVehicleEngineHealth = 0x910;
 
         // Weapon
-        m_WepSpread = 0x74;
-        m_WepDamage = 0xB0;
+        m_fWeaponSpread = 0x74;
+        m_fWeaponDamage = 0xB0;
 
         printf("[ LOG ] b3095\n");
+
+        return true;
+    }
+    else if (!mName.compare("FiveM_GTAProcess.exe"))
+    {
+        // b3258
+        GWorld = 0x25B14B0;
+        ReplayInterface = 0x1FBD4F0;
+        ViewPort = 0x201DBA0;
+        Camera = 0x201E7D0;
 
         return true;
     }

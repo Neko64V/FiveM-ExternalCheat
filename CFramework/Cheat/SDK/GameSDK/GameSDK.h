@@ -16,30 +16,30 @@ public:
     uintptr_t m_pWeaponManager = 0x10B8;
 
     // offset
-    uintptr_t m_bMatrix = 0x60;
-    uintptr_t m_pVecLocation = 0x90;
-    uintptr_t m_pGodMode = 0x189;
-    uintptr_t m_pHealth = 0x280;
-    uintptr_t m_pHealthMax = 0x284;
-    uintptr_t m_pVelocity = 0x300;
+    uintptr_t m_pBoneMatrix = 0x60;
+    uintptr_t m_vecLocation = 0x90;
+    uintptr_t m_bGodMode = 0x189;
+    uintptr_t m_fHealth = 0x280;
+    uintptr_t m_fHealthMax = 0x284;
+    uintptr_t m_vecVelocity = 0x300;
     uintptr_t m_pBoneList = 0x410;
-    uintptr_t m_pArmor = 0x150C;
-    uintptr_t m_pPedTask = 0x144B;
+    uintptr_t m_fArmor = 0x150C;
+    uintptr_t m_bPedTask = 0x144B;
 
     // player info
-    uintptr_t m_pName = 0xE0;
-    uintptr_t m_pWantedLev = 0x8D8;
+    uintptr_t m_CName = 0xE0;
+    uintptr_t m_iWantedLev = 0x8D8;
 
     // vehicle offset
-    uintptr_t m_pVehicleVelocity = 0;
-    uintptr_t m_pVehicleHealth = 0;
-    uintptr_t m_pVehicleEngineHealth = 0;
+    uintptr_t m_vecVehicleVelocity = 0;
+    uintptr_t m_fVehicleHealth = 0;
+    uintptr_t m_fVehicleEngineHealth = 0;
 
     // weapon
-    uintptr_t m_WepSpread = 0;
-    uintptr_t m_WepDamage = 0;
-    uintptr_t m_WepRecoil = 0x2F4;
-    uintptr_t m_WepRange = 0x28C;
+    uintptr_t m_fWeaponSpread = 0;
+    uintptr_t m_fWeaponDamage = 0;
+    uintptr_t m_fWeaponRecoil = 0x2F4;
+    uintptr_t m_fWeaponRange = 0x28C;
 
     bool InitOffset();
 };
@@ -51,7 +51,7 @@ enum class ePedTask {
     TASK_DRIVING = 1 << 6
 };
 
-enum Bone : int
+enum BoneId : int
 {
     HEAD = 0,
     LEFTFOOT = 1,
@@ -62,27 +62,6 @@ enum Bone : int
     RIGHTHAND = 6,
     NECK = 7,
     HIP = 8
-};
-
-extern struct CBone
-{
-    Vector3 gHead;      // 0
-    char ped_0[0x4]{};
-    Vector3 gLeftFoot;  // 1
-    char ped_1[0x4]{};
-    Vector3 gRightFoot; // 2
-    char ped_2[0x4]{};
-    Vector3 gLeftAnkle; // 3
-    char ped_3[0x4]{};
-    Vector3 gRightAnkle;// 4
-    char ped_4[0x4]{};
-    Vector3 gLeftHand;  // 5
-    char ped_5[0x4]{};
-    Vector3 gRightHand; // 6
-    char ped_6[0x4]{};
-    Vector3 gNeck;      // 7
-    char ped_7[0x4]{};
-    Vector3 gHip;       // 8
 };
 
 extern SDK sdk;

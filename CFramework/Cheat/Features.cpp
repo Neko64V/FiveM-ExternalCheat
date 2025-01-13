@@ -1,6 +1,7 @@
 #include "FrameCore.h"
 
-int bone = 0;
+int bone = 0; 
+const int ReadCount = 256;
 Vector3 GetPrediction(CPed& target, CPed& local);
 
 bool CFramework::Init()
@@ -49,6 +50,7 @@ bool CFramework::AimBot(CPed& target)
     case 2: bone = 8; break;
     }
 
+    /*
     Vector3 TargetPos = g.Aim_Prediction ? target.BoneList[bone] + GetPrediction(target, local) : target.BoneList[bone];
     Vector3 Angle = CalcAngle(CameraPos, TargetPos);
     Vector3 Delta = Angle - ViewAngle;
@@ -60,29 +62,38 @@ bool CFramework::AimBot(CPed& target)
         m.Write<Vector3>(camera + 0x3D0, WriteAngle);
     }
 
-    target = CPed();
+    target = CPed();*/
 }
 
 void CFramework::MiscAll()
 {
     // GodMode
     if (g.GodMode && !local.IsGod())
-        m.Write<bool>(local.Ped + sdk.m_pGodMode, true);
+        m.Write<bool>(local.address + sdk.m_bGodMode, true);
     else if (!g.GodMode && local.IsGod())
-        m.Write<bool>(local.Ped + sdk.m_pGodMode, false);
+        m.Write<bool>(local.address + sdk.m_bGodMode, false);
 
     // HealMe
     if (g.HealMe && local.m_fHealth <= local.m_fMaxHealth)
-        m.Write<float>(local.Ped + sdk.m_pHealth, local.m_fHealth + 0.2f);
+        m.Write<float>(local.address + sdk.m_fHealth, local.m_fHealth + 0.2f);
 
     // NoRecoil
-    if (g.NoRecoil && m.Read<float>(local.CurrentWeapon + sdk.m_WepRecoil) > 0.f)
-        m.Write<float>(local.CurrentWeapon + sdk.m_WepRecoil, 0.f);
+    if (g.NoRecoil && m.Read<float>(local.CurrentWeapon + sdk.m_fWeaponRecoil) > 0.f)
+        m.Write<float>(local.CurrentWeapon + sdk.m_fWeaponRecoil, 0.f);
 
     // NoSpread
-    if (g.NoSpread && m.Read<float>(local.CurrentWeapon + sdk.m_WepSpread) > 0.f)
-        m.Write<float>(local.CurrentWeapon + sdk.m_WepSpread, 0.f);
+    if (g.NoSpread && m.Read<float>(local.CurrentWeapon + sdk.m_fWeaponSpread) > 0.f)
+        m.Write<float>(local.CurrentWeapon + sdk.m_fWeaponSpread, 0.f);
 }
+
+struct Entity {
+    uint64_t address;
+    uint64_t junk0;
+};
+
+struct EntityList_t {
+    Entity entity[ReadCount];
+};
 
 void CFramework::UpdateList()
 {
@@ -91,26 +102,27 @@ void CFramework::UpdateList()
         std::vector<CPed> temp_pedlist;
 
         GameWorld = m.Read<uintptr_t>(m.g_BaseAddress + sdk.GWorld);
-        local.Ped = m.Read<uintptr_t>(GameWorld + 0x8);
+        local.address = m.Read<uintptr_t>(GameWorld + 0x8);
         ViewPort = m.Read<uintptr_t>(m.g_BaseAddress + sdk.ViewPort);
 
         uintptr_t ReplayInterface = m.Read<uintptr_t>(m.g_BaseAddress + sdk.ReplayInterface);
         uintptr_t EntityListPtr = m.Read<uintptr_t>(ReplayInterface + 0x18);
-        uintptr_t entitylist = m.Read<uintptr_t>(EntityListPtr + 0x100);
+        uintptr_t entitylist_addr = m.Read<uintptr_t>(EntityListPtr + 0x100);
+        
+        EntityList_t base = m.Read<EntityList_t>(entitylist_addr), *list = &base;
 
-        for (int i = 0; i < 256; i++)
+        for (int i = 0; i < ReadCount; i++)
         {
-            uintptr_t ped = m.Read<uintptr_t>(entitylist + (i * 0x10));
-            CPed p = CPed();
-            
-            if (ped == local.Ped)
-                continue;
-            else if (!p.GetPlayer(ped))
-                continue;
+            if (list->entity[i].address != NULL && list->entity[i].address != local.address)
+            {
+                CPed p = CPed();
 
-            if (p.Update()) {
-                p.Index = i;
-                temp_pedlist.push_back(p);
+                p.address = list->entity[i].address;
+
+                if (p.Update()) {
+                    p.Index = i;
+                    temp_pedlist.push_back(p);
+                }
             }
         }
 
@@ -123,12 +135,14 @@ void CFramework::UpdateList()
 
 Vector3 GetPrediction(CPed& target, CPed& local)
 {
+    Vector3 vOut{};
     Vector3 m_pVecVelocity = target.GetVelocity();
 
     if (Vec3_Empty(m_pVecVelocity))
         return Vector3();
 
-    Vector3 vOut{};
+    
+    /*
     float distance = GetDistance(target.BoneList[HEAD], local.m_pVecLocation);
     float BulletSpeed = m.Read<float>(local.CurrentWeapon + 0xE0);
 
@@ -138,6 +152,6 @@ Vector3 GetPrediction(CPed& target, CPed& local)
     // 仮。もっといい感じの案を出すべきだ。
     float time = distance / g.Aim_Predict;
     vOut = m_pVecVelocity * time;
-
+    */
     return vOut;
 }
