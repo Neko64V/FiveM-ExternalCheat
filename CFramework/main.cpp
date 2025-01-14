@@ -1,8 +1,8 @@
 #include "Cheat/FrameCore.h"
 #include "Framework/Overlay/Overlay.h"
 
-Overlay*	C_Overlay = new Overlay;
-CFramework* C_FiveM = new CFramework;
+Overlay*	overlay = new Overlay;
+CFramework* cheat = new CFramework;
 
 // DEBUG時にはコンソールウィンドウを表示する
 #if _DEBUG
@@ -11,61 +11,41 @@ int main()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #endif
 {
-	// Fix DPI Scale
-	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_SYSTEM_AWARE);
+	// DPIスケールによるあれを防ぐ
+	ImGui_ImplWin32_EnableDpiAwareness();
 
 	// Apexのウィンドウをベースにして初期化を行う
-	if (!m.AttachProcess("grcWindow", MODE::WINDOW))
+	if (!m.AttachProcess("grcWindow", WINDOW_CLASS))
 		return 1;
 
+	m.GetBaseAddress("None.", "citizen-playernames-five.dll");
+
 	// Overlay
-	if (!C_Overlay->InitOverlay("grcWindow", MODE::WINDOW))
+	if (!overlay->InitOverlay("grcWindow", WINDOW_CLASS))
 		return 2;
 
 	// Sorry, i added this
-	if (!C_FiveM->Init())
+	if (!cheat->Init())
 		return 3;
 
-	C_Overlay->OverlayLoop();
-	C_Overlay->DestroyOverlay();
+	overlay->OverlayLoop();
+	overlay->DestroyOverlay();
 	m.DetachProcess();
 	g.Run = false;
-	delete C_FiveM, C_Overlay;
+	delete cheat, overlay;
 
 	return 0;
 }
 
-void Overlay::OverlayLoop()
+void Overlay::OverlayUserFunction()
 {
-	while (g.Run)
-	{
-		MSG msg;
-		while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
+	cheat->MiscAll();
 
-		C_FiveM->MiscAll();
-		OverlayManager("grcWindow");
+	cheat->RenderInfo();
 
-		ImGui_ImplDX11_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
+	if (g.ESP)
+		cheat->RenderESP();
 
-		C_FiveM->RenderInfo();
-
-		if (g.ESP)
-			C_FiveM->RenderESP();
-
-		if (g.ShowMenu)
-			C_FiveM->RenderMenu();
-
-		ImGui::Render();
-		const float clear_color_with_alpha[4] = { 0.f, 0.f, 0.f, 0.f };
-		g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);
-		g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
-		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-		g_pSwapChain->Present(1, 0);
-	}
+	if (g.ShowMenu)
+		cheat->RenderMenu();
 }

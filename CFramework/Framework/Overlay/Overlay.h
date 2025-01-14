@@ -21,10 +21,11 @@ private:
 	bool CreateOverlay();
 	HWND GetTargetWindow(const std::string processName);	// 実行ファイル名からウィンドウハンドルを取得する
 public:
-	bool InitOverlay(const std::string targetName, int mode);
+	void OverlayUserFunction();
+	bool InitOverlay(const char* targetName, int mode);
 	void OverlayLoop();
 	void DestroyOverlay();
-	void OverlayManager(const std::string targetName);
+	void OverlayManager(const char* targetName);
 };
 
 extern ID3D11Device* g_pd3dDevice;

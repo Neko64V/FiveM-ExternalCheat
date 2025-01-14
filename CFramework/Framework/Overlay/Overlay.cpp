@@ -54,6 +54,34 @@ bool Overlay::CreateOverlay()
     return true;
 }
 
+void Overlay::OverlayLoop()
+{
+    while (g.Run)
+    {
+        MSG msg;
+        while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+
+        OverlayManager("grcWindow");
+
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+
+        OverlayUserFunction();
+
+        ImGui::Render();
+        const float clear_color_with_alpha[4] = { 0.f, 0.f, 0.f, 0.f };
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);
+        g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+        g_pSwapChain->Present(1, 0);
+    }
+}
+
 void Overlay::DestroyOverlay()
 {
     ImGui_ImplDX11_Shutdown();
@@ -65,17 +93,21 @@ void Overlay::DestroyOverlay()
     UnregisterClassA(wc.lpszClassName, wc.hInstance);
 }
 
-bool Overlay::InitOverlay(const std::string targetName, int mode)
+bool Overlay::InitOverlay(const char* targetName, int mode)
 {
-    switch (mode)
-    {
-    case MODE::WINDOW:
-        TargetHwnd = FindWindowA(nullptr, targetName.c_str());
-        break;
-    case MODE::PROCESS:
+    if (mode == WINDOW_TITLE || mode == WINDOW_CLASS) {
+        TargetHwnd = WINDOW_TITLE ? FindWindowA(nullptr, targetName) : FindWindowA(targetName, nullptr);
+
+        if (!TargetHwnd)
+            return false;
+    }
+    else if (mode == PROCESS) {
         TargetHwnd = GetTargetWindow(targetName);
-        break;
-    default:
+
+        if (!TargetHwnd)
+            return false;
+    }
+    else {
         return false;
     }
 
@@ -83,10 +115,10 @@ bool Overlay::InitOverlay(const std::string targetName, int mode)
 }
 
 // オーバーレイのサイズや位置を対象のウィンドウに合わせる
-void Overlay::OverlayManager(const std::string targetName)
+void Overlay::OverlayManager(const char* targetName)
 {
     // Window Check
-    HWND CheckHwnd = FindWindowA(targetName.c_str(), nullptr);
+    HWND CheckHwnd = FindWindowA(targetName, nullptr);
     if (!CheckHwnd) {
         g.Run = false;
         return;
