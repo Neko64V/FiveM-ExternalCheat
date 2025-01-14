@@ -39,7 +39,7 @@ bool CFramework::AimBot(CPed& target)
     }
     /*--------------------------------------------------------------------------------------------------*/
 
-    uintptr_t camera = m.Read<uintptr_t>(m.g_BaseAddress + sdk.Camera);
+    uintptr_t camera = m.Read<uintptr_t>(m.m_gProcessBaseAddr + sdk.Camera);
     Vector3 ViewAngle = m.Read<Vector3>(camera + 0x3D0); // 0x40
     Vector3 CameraPos = m.Read<Vector3>(camera + 0x60);
 
@@ -50,8 +50,8 @@ bool CFramework::AimBot(CPed& target)
     case 2: bone = 8; break;
     }
 
-    /*
-    Vector3 TargetPos = g.Aim_Prediction ? target.BoneList[bone] + GetPrediction(target, local) : target.BoneList[bone];
+    std::vector<Vector3> BoneList = target.GetBoneList();
+    Vector3 TargetPos = g.Aim_Prediction ? BoneList[bone] + GetPrediction(target, local) : BoneList[bone];
     Vector3 Angle = CalcAngle(CameraPos, TargetPos);
     Vector3 Delta = Angle - ViewAngle;
     Vector3 WriteAngle = ViewAngle + (Delta / g.Aim_Smooth);
@@ -62,7 +62,7 @@ bool CFramework::AimBot(CPed& target)
         m.Write<Vector3>(camera + 0x3D0, WriteAngle);
     }
 
-    target = CPed();*/
+    target = CPed();
 }
 
 void CFramework::MiscAll()
@@ -101,14 +101,18 @@ void CFramework::UpdateList()
     {
         std::vector<CPed> temp_pedlist;
 
-        GameWorld = m.Read<uintptr_t>(m.g_BaseAddress + sdk.GWorld);
+        GameWorld = m.Read<uintptr_t>(m.m_gProcessBaseAddr + sdk.GWorld);
         local.address = m.Read<uintptr_t>(GameWorld + 0x8);
-        ViewPort = m.Read<uintptr_t>(m.g_BaseAddress + sdk.ViewPort);
+        ViewPort = m.Read<uintptr_t>(m.m_gProcessBaseAddr + sdk.ViewPort);
 
-        uintptr_t ReplayInterface = m.Read<uintptr_t>(m.g_BaseAddress + sdk.ReplayInterface);
+        uintptr_t ReplayInterface = m.Read<uintptr_t>(m.m_gProcessBaseAddr + sdk.ReplayInterface);
         uintptr_t EntityListPtr = m.Read<uintptr_t>(ReplayInterface + 0x18);
         uintptr_t entitylist_addr = m.Read<uintptr_t>(EntityListPtr + 0x100);
         
+        uintptr_t NameDll = m.Read<uintptr_t>(m.m_gNameDllBaseAddr + 0x34D28);
+        uintptr_t temp = m.Read<uintptr_t>(NameDll + 0x8);
+        uintptr_t NameList = m.Read<uintptr_t>(NameDll);
+
         EntityList_t base = m.Read<EntityList_t>(entitylist_addr), *list = &base;
 
         for (int i = 0; i < ReadCount; i++)
@@ -141,17 +145,17 @@ Vector3 GetPrediction(CPed& target, CPed& local)
     if (Vec3_Empty(m_pVecVelocity))
         return Vector3();
 
-    
-    /*
-    float distance = GetDistance(target.BoneList[HEAD], local.m_pVecLocation);
+    float distance = GetDistance(target.m_pVecLocation, local.m_pVecLocation);
     float BulletSpeed = m.Read<float>(local.CurrentWeapon + 0xE0);
 
     if (BulletSpeed == 0.f)
         return Vector3();
+    else if (BulletSpeed < 100.f)
+        BulletSpeed = 1800.f; // 仮
 
     // 仮。もっといい感じの案を出すべきだ。
     float time = distance / g.Aim_Predict;
     vOut = m_pVecVelocity * time;
-    */
+    
     return vOut;
 }

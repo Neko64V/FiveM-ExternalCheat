@@ -5,10 +5,9 @@ SDK sdk;
 bool SDK::InitOffset()
 {
     char pModule[128]{};
-    GetModuleBaseNameA(m.pHandle, nullptr, pModule, sizeof(pModule));
-    std::string mName = pModule;
+    GetModuleBaseNameA(m.m_hProcess, nullptr, pModule, sizeof(pModule));
 
-    if (!mName.compare("FiveM_b2699_GTAProcess.exe"))
+    if (strcmp(pModule, "FiveM_b2699_GTAProcess.exe") == 0)
     {
         // b2699
         GWorld = 0x26684D8;
@@ -39,7 +38,7 @@ bool SDK::InitOffset()
 
         return true;
     }
-    else if (!mName.compare("FiveM_b2802_GTAProcess.exe"))
+    else if (strcmp(pModule, "FiveM_b2802_GTAProcess.exe") == 0)
     {
         // b2802
         GWorld = 0x254D448;
@@ -58,7 +57,7 @@ bool SDK::InitOffset()
 
         return true;
     }
-    else if (!mName.compare("FiveM_b2944_GTAProcess.exe"))
+    else if (strcmp(pModule, "FiveM_b2944_GTAProcess.exe") == 0)
     {
         // b2944
         GWorld = 0x257BEA0;
@@ -77,7 +76,7 @@ bool SDK::InitOffset()
 
         return true;
     }
-    else if (!mName.compare("FiveM_b3095_GTAProcess.exe"))
+    else if (strcmp(pModule, "FiveM_b3095_GTAProcess.exe") == 0)
     {
         // b3095
         GWorld = 0x2593320;
@@ -97,13 +96,23 @@ bool SDK::InitOffset()
 
         return true;
     }
-    else if (!mName.compare("FiveM_GTAProcess.exe"))
+    else if (strcmp(pModule, "FiveM_GTAProcess.exe") == 0)
     {
         // b3258
         GWorld = 0x25B14B0;
         ReplayInterface = 0x1FBD4F0;
         ViewPort = 0x201DBA0;
         Camera = 0x201E7D0;
+
+        // Vehicle
+        m_vecVehicleVelocity = 0x7E0;
+        m_fVehicleEngineHealth = 0x910;
+
+        // Weapon
+        m_fWeaponSpread = 0x74;
+        m_fWeaponDamage = 0xB0;
+
+        printf("[ LOG ] b3258 (?)\n");
 
         return true;
     }
