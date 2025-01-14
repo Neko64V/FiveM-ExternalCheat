@@ -108,10 +108,6 @@ void CFramework::UpdateList()
         uintptr_t ReplayInterface = m.Read<uintptr_t>(m.m_gProcessBaseAddr + sdk.ReplayInterface);
         uintptr_t EntityListPtr = m.Read<uintptr_t>(ReplayInterface + 0x18);
         uintptr_t entitylist_addr = m.Read<uintptr_t>(EntityListPtr + 0x100);
-        
-        uintptr_t NameDll = m.Read<uintptr_t>(m.m_gNameDllBaseAddr + 0x34D28);
-        uintptr_t temp = m.Read<uintptr_t>(NameDll + 0x8);
-        uintptr_t NameList = m.Read<uintptr_t>(NameDll);
 
         EntityList_t base = m.Read<EntityList_t>(entitylist_addr), *list = &base;
 
