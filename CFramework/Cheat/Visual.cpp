@@ -6,8 +6,6 @@ void CFramework::RenderInfo()
     std::string text = std::to_string((int)ImGui::GetIO().Framerate) + "FPS";
     StringEx(ImVec2(8.f, 8.f), ImColor(1.f, 1.f, 1.f, 1.f), ImGui::GetFontSize(), text.c_str());
 
-    ImGui::GetStyle().AntiAliasedLines = false;
-
     // FovCircle
     if (g.AimBot && g.Aim_DrawFov)
         ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(g.GameRect.right / 2.f, g.GameRect.bottom / 2.f), g.Aim_Fov, FOV_User);
@@ -19,17 +17,17 @@ void CFramework::RenderInfo()
         {
         case 0: {
             ImVec2 Center = ImVec2(g.GameRect.right / 2, g.GameRect.bottom / 2);
+
             ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Center.x - g.CrosshairSize, Center.y), ImVec2((Center.x + g.CrosshairSize) + 1, Center.y), CrosshairColor, 1);
             ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Center.x, Center.y - g.CrosshairSize), ImVec2(Center.x, (Center.y + g.CrosshairSize) + 1), CrosshairColor, 1);
         }   break;
         case 1:
-            ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2((float)g.GameRect.right / 2.f, (float)g.GameRect.bottom / 2.f), g.CrosshairSize + 1, ImColor(0.f, 0.f, 0.f, 1.f), NULL);
-            ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2((float)g.GameRect.right / 2.f, (float)g.GameRect.bottom / 2.f), g.CrosshairSize, CrosshairColor, NULL);
+            ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2((int)g.GameRect.right / 2.f, (int)g.GameRect.bottom / 2.f), g.CrosshairSize + 1, ImColor(0.f, 0.f, 0.f, 1.f), NULL);
+            ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2((int)g.GameRect.right / 2.f, (int)g.GameRect.bottom / 2.f), g.CrosshairSize, CrosshairColor, NULL);
             break;
         }
     }
 
-    ImGui::GetStyle().AntiAliasedLines = true;
 }
 
 void CFramework::RenderESP()
@@ -68,6 +66,7 @@ void CFramework::RenderESP()
         std::vector<Vector2> bScreen;
         std::vector<Vector3> BoneList = pEntity->GetBoneList();
 
+        // WorldToScreenを行う
         for (int j = 0; j < BoneList.size(); j++)
         {
             Vector2 vOut{};
